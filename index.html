@@ -6,170 +6,63 @@
   <title>Finance Tracker</title>
   <style>
     :root {
-      --bg: #f5f7fa;
-      --card: #ffffff;
-      --text: #1a1d24;
-      --subtle: #6b7280;
-      --income: #10b981;
-      --expense: #ef4444;
-      --savings: #3b82f6;
-      --border: #e5e7eb;
-      --shadow: 0 2px 8px rgba(0,0,0,0.08);
-      --purple: #6366f1;
-      --purple2: #8b5cf6;
+      --bg: #f5f7fa; --card: #ffffff; --text: #1a1d24; --subtle: #6b7280;
+      --income: #10b981; --expense: #ef4444; --savings: #3b82f6;
+      --border: #e5e7eb; --shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --purple: #6366f1; --purple2: #8b5cf6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* ── LOADING ── */
+    /* LOADING */
     #loadingScreen {
-      position: fixed; inset: 0; background: #fff;
+      position: fixed; inset: 0; background: #fff; z-index: 999;
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
-      z-index: 999;
     }
-    .spinner {
-      width: 40px; height: 40px; border: 3px solid var(--border);
-      border-top-color: var(--purple); border-radius: 50%; animation: spin 0.7s linear infinite;
-    }
+    .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── AUTH PAGE ── */
+    /* AUTH */
     #authPage {
       display: none; min-height: 100vh;
       background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
       align-items: center; justify-content: center; padding: 24px;
     }
-    .auth-box {
-      background: #fff; border-radius: 20px; padding: 32px 28px;
-      width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(99,102,241,0.25);
-    }
+    .auth-box { background: #fff; border-radius: 20px; padding: 32px 28px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(99,102,241,0.25); }
     .auth-logo { text-align: center; margin-bottom: 24px; }
     .auth-logo h1 { font-size: 28px; font-weight: 800; color: var(--purple); }
     .auth-logo p { font-size: 14px; color: var(--subtle); margin-top: 4px; }
 
     .auth-tabs { display: flex; background: var(--bg); border-radius: 10px; padding: 4px; margin-bottom: 24px; }
-    .auth-tab {
-      flex: 1; padding: 10px; text-align: center; border-radius: 8px;
-      font-size: 14px; font-weight: 600; cursor: pointer; color: var(--subtle); transition: all 0.2s;
-    }
+    .auth-tab { flex: 1; padding: 10px; text-align: center; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--subtle); transition: all 0.2s; }
     .auth-tab.active { background: #fff; color: var(--purple); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
 
     .auth-field { margin-bottom: 14px; }
     .auth-field label { display: block; font-size: 13px; color: var(--subtle); margin-bottom: 6px; font-weight: 500; }
-    .auth-field input {
-      width: 100%; padding: 13px 14px; border: 1.5px solid var(--border);
-      border-radius: 10px; font-size: 15px; background: #fafafa; transition: border-color 0.2s;
-    }
+    .auth-field input { width: 100%; padding: 13px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 15px; background: #fafafa; transition: border-color 0.2s; }
     .auth-field input:focus { outline: none; border-color: var(--purple); background: #fff; }
+    .auth-hint { font-size: 11px; color: var(--subtle); margin-top: 4px; }
 
-    .input-hint { font-size: 11px; color: var(--subtle); margin-top: 4px; }
-
-    .btn-auth {
-      width: 100%; padding: 14px; background: linear-gradient(135deg, var(--purple), var(--purple2));
-      color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
-      cursor: pointer; margin-top: 4px; transition: opacity 0.2s;
-    }
+    .btn-auth { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--purple), var(--purple2)); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 4px; transition: opacity 0.2s; }
     .btn-auth:hover { opacity: 0.92; }
     .btn-auth:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    .auth-link {
-      text-align: center; margin-top: 14px; font-size: 13px; color: var(--subtle);
-    }
-    .auth-link a { color: var(--purple); font-weight: 600; cursor: pointer; text-decoration: none; }
-    .auth-link a:hover { text-decoration: underline; }
+    .auth-error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; display: none; }
+    .auth-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; display: none; }
 
-    .auth-error {
-      background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
-      padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; display: none;
-    }
-    .auth-success {
-      background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d;
-      padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; display: none;
-    }
+    /* APP */
+    #appPage { display: none; }
+    .app-wrap { max-width: 800px; margin: 0 auto; padding: 16px; padding-bottom: 80px; }
 
-    /* ── APP PAGE ── */
-    #appPage { display: none; padding: 16px; padding-bottom: 80px; max-width: 800px; margin: 0 auto; }
-
-    .app-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
-    }
+    .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
     .app-header h1 { font-size: 20px; font-weight: 800; color: var(--purple); }
     .user-info { display: flex; align-items: center; gap: 10px; }
-    .user-badge {
-      display: flex; align-items: center; gap: 6px;
-      background: #eef2ff; border-radius: 99px; padding: 6px 12px;
-      cursor: pointer; border: 1px solid #c7d2fe; transition: background 0.2s;
-    }
-    .user-badge:hover { background: #e0e7ff; }
-    .user-badge-name { font-size: 13px; font-weight: 600; color: var(--purple); }
-    .user-badge-avatar {
-      width: 24px; height: 24px; background: var(--purple); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; color: #fff;
-    }
-    .btn-logout {
-      padding: 7px 14px; background: #f3f4f6; border: 1px solid var(--border);
-      border-radius: 8px; font-size: 13px; cursor: pointer; color: var(--text); font-weight: 500;
-    }
+    .user-badge { font-size: 12px; color: var(--subtle); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+    .user-badge strong { display: block; color: var(--text); font-size: 13px; }
+    .btn-logout { padding: 7px 14px; background: #f3f4f6; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; cursor: pointer; color: var(--text); font-weight: 500; }
     .btn-logout:hover { background: #fee2e2; color: #dc2626; border-color: #fecaca; }
 
-    /* ── PROFILE MODAL ── */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200;
-      display: none; align-items: center; justify-content: center; padding: 24px;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: #fff; border-radius: 20px; padding: 28px 24px;
-      width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-      animation: slideUp 0.25s ease;
-    }
-    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .modal-header h2 { font-size: 17px; font-weight: 700; }
-    .modal-close { background: #f3f4f6; border: none; border-radius: 8px; width: 32px; height: 32px; cursor: pointer; font-size: 18px; color: var(--subtle); }
-    .modal-close:hover { background: #e5e7eb; }
-
-    .profile-avatar {
-      width: 64px; height: 64px; background: linear-gradient(135deg, var(--purple), var(--purple2));
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 24px; font-weight: 800; color: #fff; margin: 0 auto 16px;
-    }
-    .profile-name { text-align: center; font-size: 18px; font-weight: 700; }
-    .profile-email { text-align: center; font-size: 13px; color: var(--subtle); margin-top: 4px; margin-bottom: 20px; }
-
-    .modal-section { margin-bottom: 16px; }
-    .modal-section h3 { font-size: 13px; font-weight: 600; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-    .modal-field { margin-bottom: 12px; }
-    .modal-field label { display: block; font-size: 13px; color: var(--subtle); margin-bottom: 5px; font-weight: 500; }
-    .modal-field input {
-      width: 100%; padding: 11px 13px; border: 1.5px solid var(--border);
-      border-radius: 10px; font-size: 14px; background: #fafafa;
-    }
-    .modal-field input:focus { outline: none; border-color: var(--purple); background: #fff; }
-
-    .btn-modal {
-      width: 100%; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700;
-      cursor: pointer; border: none; margin-top: 4px; transition: opacity 0.2s;
-    }
-    .btn-modal-primary { background: linear-gradient(135deg, var(--purple), var(--purple2)); color: #fff; }
-    .btn-modal-primary:hover { opacity: 0.9; }
-    .btn-modal-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-modal-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; margin-top: 8px; }
-    .btn-modal-danger:hover { background: #fee2e2; }
-
-    .modal-error {
-      background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
-      padding: 9px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 10px; display: none;
-    }
-    .modal-success {
-      background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d;
-      padding: 9px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 10px; display: none;
-    }
-    .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
-
-    /* Summary Cards */
+    /* Summary */
     .summary-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
     .summary-top { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
     .summary-top .card { flex: 0 1 160px; }
@@ -177,9 +70,7 @@
     .card h3 { font-size: 12px; color: var(--subtle); margin-bottom: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
     .card p { font-size: 17px; font-weight: 800; }
     .card.total { background: linear-gradient(135deg, #f9fafb, #eef2ff); border: 1px solid #c7d2fe; }
-    .income { color: var(--income); }
-    .expense { color: var(--expense); }
-    .savings { color: var(--savings); }
+    .income { color: var(--income); } .expense { color: var(--expense); } .savings { color: var(--savings); }
 
     /* Form */
     .form-box { background: var(--card); padding: 16px; border-radius: 14px; box-shadow: var(--shadow); margin-bottom: 18px; }
@@ -187,63 +78,34 @@
     .form-row { display: flex; gap: 10px; margin-bottom: 12px; }
     .col { flex: 1; display: flex; flex-direction: column; }
     label { font-size: 13px; color: var(--subtle); margin-bottom: 4px; font-weight: 500; }
-    input, select {
-      padding: 12px; border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 15px; background: #fafafa; width: 100%; touch-action: manipulation;
-    }
+    input, select { padding: 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 15px; background: #fafafa; width: 100%; touch-action: manipulation; }
     input:focus, select:focus { outline: none; border-color: var(--purple); background: #fff; }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--purple), var(--purple2)); color: white; border: none;
-      padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700; width: 100%; cursor: pointer;
-      transition: opacity 0.2s;
-    }
+    .btn-primary { background: linear-gradient(135deg, var(--purple), var(--purple2)); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700; width: 100%; cursor: pointer; transition: opacity 0.2s; }
     .btn-primary:active { transform: scale(0.98); }
     .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
     /* Tabs */
     .tabs { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; }
-    .tab {
-      padding: 10px 16px; background: var(--card); border-radius: 99px; font-size: 14px;
-      white-space: nowrap; border: 1.5px solid var(--border); cursor: pointer; flex-shrink: 0; font-weight: 500;
-    }
+    .tab { padding: 10px 16px; background: var(--card); border-radius: 99px; font-size: 14px; white-space: nowrap; border: 1.5px solid var(--border); cursor: pointer; flex-shrink: 0; font-weight: 500; }
     .tab.active { background: var(--purple); color: white; border-color: var(--purple); }
 
     /* List */
     .list { display: flex; flex-direction: column; gap: 10px; }
-    .item {
-      background: var(--card); padding: 14px; border-radius: 12px; box-shadow: var(--shadow);
-      display: flex; justify-content: space-between; align-items: center; border-left: 5px solid transparent;
-    }
-    .item.income { border-left-color: var(--income); }
-    .item.expense { border-left-color: var(--expense); }
-    .item.savings { border-left-color: var(--savings); }
+    .item { background: var(--card); padding: 14px; border-radius: 12px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid transparent; }
+    .item.income { border-left-color: var(--income); } .item.expense { border-left-color: var(--expense); } .item.savings { border-left-color: var(--savings); }
     .info h4 { font-size: 15px; margin-bottom: 4px; font-weight: 600; }
     .info span { font-size: 12px; color: var(--subtle); }
     .amount { font-weight: 700; font-size: 16px; text-align: right; min-width: 90px; }
-    .btn-del {
-      background: #fee2e2; color: #dc2626; border: none; width: 32px; height: 32px;
-      border-radius: 8px; margin-left: 10px; cursor: pointer; font-size: 18px; line-height: 1;
-      flex-shrink: 0;
-    }
+    .btn-del { background: #fee2e2; color: #dc2626; border: none; width: 32px; height: 32px; border-radius: 8px; margin-left: 10px; cursor: pointer; font-size: 18px; line-height: 1; flex-shrink: 0; }
 
-    /* Sync status */
     .sync-status { text-align: center; font-size: 12px; color: var(--subtle); padding: 8px; margin-bottom: 8px; }
-    .sync-status.saving { color: #f59e0b; }
-    .sync-status.saved { color: var(--income); }
-    .sync-status.error { color: var(--expense); }
+    .sync-status.saving { color: #f59e0b; } .sync-status.saved { color: var(--income); } .sync-status.error { color: var(--expense); }
 
-    /* Empty state */
     .empty { text-align: center; color: var(--subtle); padding: 32px 20px; }
     .empty p { margin-top: 8px; font-size: 14px; }
 
-    /* Toast */
-    .toast {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: #1a1d24; color: #fff; padding: 12px 20px; border-radius: 10px;
-      font-size: 14px; z-index: 300; opacity: 0; transition: opacity 0.3s; pointer-events: none;
-      white-space: nowrap; max-width: 90vw;
-    }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1d24; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 14px; z-index: 100; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
     .toast.show { opacity: 1; }
 
     @media (min-width: 600px) {
@@ -253,689 +115,503 @@
 </head>
 <body>
 
-<!-- Loading -->
-<div id="loadingScreen">
-  <div class="spinner"></div>
-  <p style="color:#6b7280;font-size:14px;">Memuat...</p>
-</div>
-
-<!-- Auth Page -->
-<div id="authPage" style="display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a78bfa 100%);">
-  <div class="auth-box">
-    <div class="auth-logo">
-      <h1>💰 Finance Tracker</h1>
-      <p>Catat keuangan kamu dari mana saja</p>
-    </div>
-
-    <div class="auth-tabs">
-      <div class="auth-tab active" id="tabLogin"    onclick="switchAuthTab('login')">Masuk</div>
-      <div class="auth-tab"        id="tabRegister" onclick="switchAuthTab('register')">Daftar</div>
-    </div>
-
-    <div id="authError"   class="auth-error"></div>
-    <div id="authSuccess" class="auth-success"></div>
-
-    <!-- LOGIN FORM -->
-    <div id="formLogin">
-      <div class="auth-field">
-        <label>Username atau Email</label>
-        <input type="text" id="loginIdentifier" placeholder="username atau emailkamu@gmail.com" autocomplete="username">
-        <div class="input-hint">Bisa login pakai username atau email</div>
-      </div>
-      <div class="auth-field">
-        <label>Password</label>
-        <input type="password" id="loginPassword" placeholder="Minimal 6 karakter" autocomplete="current-password">
-      </div>
-      <button class="btn-auth" id="btnLogin" onclick="doLogin()">Masuk</button>
-      <div class="auth-link">
-        <a onclick="switchAuthTab('forgot')">Lupa password?</a>
-      </div>
-    </div>
-
-    <!-- REGISTER FORM -->
-    <div id="formRegister" style="display:none;">
-      <div class="auth-field">
-        <label>Username</label>
-        <input type="text" id="regUsername" placeholder="cth: Jamet123" autocomplete="username">
-        <div class="input-hint">3–20 karakter, huruf/angka/underscore saja</div>
-      </div>
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="regEmail" placeholder="emailkamu@gmail.com" autocomplete="email">
-      </div>
-      <div class="auth-field">
-        <label>Password</label>
-        <input type="password" id="regPassword" placeholder="Minimal 6 karakter" autocomplete="new-password">
-      </div>
-      <div class="auth-field">
-        <label>Konfirmasi Password</label>
-        <input type="password" id="regPassword2" placeholder="Ulangi password" autocomplete="new-password">
-      </div>
-      <button class="btn-auth" id="btnRegister" onclick="doRegister()">Buat Akun</button>
-    </div>
-
-    <!-- FORGOT PASSWORD FORM -->
-    <div id="formForgot" style="display:none;">
-      <p style="font-size:14px;color:var(--subtle);margin-bottom:16px;">
-        Masukkan email yang terdaftar. Kami akan mengirim link reset password ke email kamu.
-      </p>
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="forgotEmail" placeholder="emailkamu@gmail.com" autocomplete="email">
-      </div>
-      <button class="btn-auth" id="btnForgot" onclick="doForgotPassword()">Kirim Link Reset</button>
-      <div class="auth-link" style="margin-top:12px;">
-        <a onclick="switchAuthTab('login')">← Kembali ke login</a>
-      </div>
-    </div>
+  <!-- Loading -->
+  <div id="loadingScreen">
+    <div class="spinner"></div>
+    <p style="color:#6b7280;font-size:14px;">Memuat...</p>
   </div>
-</div>
 
-<!-- Profile / Settings Modal -->
-<div class="modal-overlay" id="profileModal" onclick="closeProfileModal(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>⚙️ Profil & Pengaturan</h2>
-      <button class="modal-close" onclick="closeProfileModal()">×</button>
-    </div>
-
-    <div class="profile-avatar" id="profileAvatar">?</div>
-    <div class="profile-name"  id="profileName">—</div>
-    <div class="profile-email" id="profileEmail">—</div>
-
-    <hr class="divider">
-
-    <!-- Change Username -->
-    <div class="modal-section">
-      <h3>Ubah Username</h3>
-      <div id="usernameError"   class="modal-error"></div>
-      <div id="usernameSuccess" class="modal-success"></div>
-      <div class="modal-field">
-        <label>Username Baru</label>
-        <input type="text" id="newUsername" placeholder="username baru">
+  <!-- Auth Page -->
+  <div id="authPage" style="display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a78bfa 100%);">
+    <div class="auth-box">
+      <div class="auth-logo">
+        <h1>💰 Finance Tracker</h1>
+        <p>Catat keuangan kamu dari mana saja</p>
       </div>
-      <button class="btn-modal btn-modal-primary" id="btnSaveUsername" onclick="doChangeUsername()">Simpan Username</button>
-    </div>
 
-    <hr class="divider">
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Masuk</div>
+        <div class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Daftar</div>
+      </div>
 
-    <!-- Reset Password via Email -->
-    <div class="modal-section">
-      <h3>Reset Password</h3>
-      <div id="resetError"   class="modal-error"></div>
-      <div id="resetSuccess" class="modal-success"></div>
-      <p style="font-size:13px;color:var(--subtle);margin-bottom:10px;">
-        Link reset password akan dikirim ke email kamu. Cek kotak masuk (dan folder spam).
-      </p>
-      <button class="btn-modal btn-modal-danger" id="btnSendReset" onclick="doSendResetFromProfile()">📧 Kirim Link Reset Password</button>
-    </div>
+      <div id="authError" class="auth-error"></div>
+      <div id="authSuccess" class="auth-success"></div>
 
-    <hr class="divider">
-
-    <button class="btn-modal btn-modal-danger" onclick="doLogout()" style="border:1px solid #fecaca;">🚪 Keluar</button>
-  </div>
-</div>
-
-<!-- App Page -->
-<div id="appPage" style="display:none;">
-  <div style="max-width:800px;margin:0 auto;padding:16px;padding-bottom:80px;">
-
-    <div class="app-header">
-      <h1>💰 Finance Tracker</h1>
-      <div class="user-info">
-        <div class="user-badge" onclick="openProfileModal()">
-          <div class="user-badge-avatar" id="headerAvatar">?</div>
-          <span class="user-badge-name" id="headerUsername">—</span>
-          <span style="font-size:12px;color:var(--subtle);">▾</span>
+      <!-- Form Login -->
+      <div id="formLogin">
+        <div class="auth-field">
+          <label>Username atau Email</label>
+          <input type="text" id="loginIdentifier" placeholder="username atau emailkamu@gmail.com" autocomplete="username">
         </div>
-        <button class="btn-logout" onclick="doLogout()">Keluar</button>
+        <div class="auth-field">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Password kamu" autocomplete="current-password">
+        </div>
+        <button class="btn-auth" id="btnLogin" onclick="doLogin()">Masuk</button>
+        <p style="text-align:center;margin-top:14px;font-size:13px;color:#6b7280;">
+          Lupa password?
+          <span onclick="switchAuthTab('reset')" style="color:#6366f1;cursor:pointer;font-weight:600;">Reset di sini</span>
+        </p>
+      </div>
+
+      <!-- Form Daftar -->
+      <div id="formRegister" style="display:none;">
+        <div class="auth-field">
+          <label>Username</label>
+          <input type="text" id="regUsername" placeholder="contoh: budi123" autocomplete="off">
+          <p class="auth-hint">Hanya huruf, angka, dan underscore. Min. 3 karakter.</p>
+        </div>
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="emailkamu@gmail.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input type="password" id="regPassword" placeholder="Minimal 6 karakter" autocomplete="new-password">
+        </div>
+        <div class="auth-field">
+          <label>Konfirmasi Password</label>
+          <input type="password" id="regPassword2" placeholder="Ulangi password" autocomplete="new-password">
+        </div>
+        <button class="btn-auth" id="btnRegister" onclick="doRegister()">Buat Akun</button>
+      </div>
+
+      <!-- Form Reset Password -->
+      <div id="formReset" style="display:none;">
+        <p style="font-size:13px;color:#6b7280;margin-bottom:16px;text-align:center;">
+          Masukkan email kamu, kami akan kirim link reset password.
+        </p>
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="resetEmail" placeholder="emailkamu@gmail.com" autocomplete="email">
+        </div>
+        <button class="btn-auth" id="btnReset" onclick="doResetPassword()">Kirim Link Reset</button>
+        <p style="text-align:center;margin-top:14px;font-size:13px;">
+          <span onclick="switchAuthTab('login')" style="color:#6366f1;cursor:pointer;font-weight:600;">← Kembali ke Login</span>
+        </p>
       </div>
     </div>
+  </div>
 
-    <div class="summary-grid">
-      <div class="summary-top">
-        <div class="card"><h3>Pemasukan</h3><p class="income" id="sumIncome">Rp0</p></div>
-        <div class="card"><h3>Pengeluaran</h3><p class="expense" id="sumExpense">Rp0</p></div>
-        <div class="card"><h3>Tabungan</h3><p class="savings" id="sumSavings">Rp0</p></div>
-      </div>
-      <div class="card total"><h3>Sisa Saldo Bersih</h3><p id="sumBalance">Rp0</p></div>
-    </div>
-
-    <div class="form-box">
-      <h2>+ Catat Transaksi</h2>
-      <div class="form-row">
-        <div class="col" style="flex:1.2"><label>Tanggal</label><input type="date" id="inputDate"></div>
-        <div class="col" style="flex:0.8"><label>Jumlah (Rp)</label><input type="text" id="inputAmount" placeholder="0" inputmode="numeric"></div>
-      </div>
-      <div class="form-row">
-        <div class="col"><label>Keterangan</label><input type="text" id="inputDesc" placeholder="Gaji, Belanja, dll"></div>
-        <div class="col"><label>Jenis</label>
-          <select id="inputType">
-            <option value="income">📥 Pemasukan</option>
-            <option value="expense">🛒 Pengeluaran</option>
-            <option value="savings">💸 Tabungan</option>
-          </select>
+  <!-- App Page -->
+  <div id="appPage" style="display:none;">
+    <div class="app-wrap">
+      <div class="app-header">
+        <h1>💰 Finance Tracker</h1>
+        <div class="user-info">
+          <div class="user-badge">
+            <strong id="userDisplayName"></strong>
+            <span id="userEmailDisplay"></span>
+          </div>
+          <button class="btn-logout" onclick="doLogout()">Keluar</button>
         </div>
       </div>
-      <div id="syncStatus" class="sync-status"></div>
-      <button class="btn-primary" id="btnAdd" onclick="addTransaction()">+ Simpan Transaksi</button>
-    </div>
 
-    <div class="tabs">
-      <div class="tab active" data-filter="all">Semua</div>
-      <div class="tab" data-filter="income">📥 Pemasukan</div>
-      <div class="tab" data-filter="expense">🛒 Pengeluaran</div>
-      <div class="tab" data-filter="savings">💸 Tabungan</div>
-    </div>
+      <div class="summary-grid">
+        <div class="summary-top">
+          <div class="card"><h3>Pemasukan</h3><p class="income" id="sumIncome">Rp0</p></div>
+          <div class="card"><h3>Pengeluaran</h3><p class="expense" id="sumExpense">Rp0</p></div>
+          <div class="card"><h3>Saldo Tabungan</h3><p class="savings" id="sumSavings">Rp0</p></div>
+        </div>
+        <div class="card total"><h3>Sisa Saldo Bersih</h3><p id="sumBalance">Rp0</p></div>
+      </div>
 
-    <div class="list" id="txList">
-      <div class="empty">
-        <div style="font-size:32px;">📋</div>
-        <p>Memuat transaksi...</p>
+      <div class="form-box">
+        <h2>+ Catat Transaksi</h2>
+        <div class="form-row">
+          <div class="col" style="flex:1.2"><label>Tanggal</label><input type="date" id="inputDate"></div>
+          <div class="col" style="flex:0.8"><label>Jumlah (Rp)</label><input type="text" id="inputAmount" placeholder="0" inputmode="numeric"></div>
+        </div>
+        <div class="form-row">
+          <div class="col"><label>Keterangan</label><input type="text" id="inputDesc" placeholder="Gaji, Belanja, dll"></div>
+          <div class="col"><label>Jenis</label>
+            <select id="inputType">
+              <option value="income">📥 Pemasukan</option>
+              <option value="expense">🛒 Pengeluaran</option>
+              <option value="savings">💸 Setor Tabungan</option>
+              <option value="savings_out">💰 Tarik Tabungan</option>
+            </select>
+          </div>
+        </div>
+        <div id="syncStatus" class="sync-status"></div>
+        <button class="btn-primary" id="btnAdd" onclick="addTransaction()">+ Simpan Transaksi</button>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" data-filter="all">Semua</div>
+        <div class="tab" data-filter="income">📥 Pemasukan</div>
+        <div class="tab" data-filter="expense">🛒 Pengeluaran</div>
+        <div class="tab" data-filter="savings">💸 Setor Tabungan</div>
+        <div class="tab" data-filter="savings_out">💰 Tarik Tabungan</div>
+      </div>
+
+      <div class="list" id="txList">
+        <div class="empty"><div style="font-size:32px;">📋</div><p>Memuat transaksi...</p></div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="toast" id="toast"></div>
+  <div class="toast" id="toast"></div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import {
-    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    signOut, onAuthStateChanged, sendPasswordResetEmail
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import {
-    getFirestore, collection, addDoc, deleteDoc, doc,
-    onSnapshot, query, orderBy, serverTimestamp,
-    setDoc, getDoc, getDocs, where
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+      signOut, onAuthStateChanged, sendPasswordResetEmail
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore, collection, addDoc, deleteDoc, doc,
+      onSnapshot, query, orderBy, serverTimestamp,
+      setDoc, getDoc, getDocs, where
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  // ── Firebase Config ──────────────────────────────────────────────────────
-  const firebaseConfig = {
-    apiKey: "AIzaSyDJsUqYcNSwcwImS5zXYtIIo7hNvXEJAic",
-    authDomain: "finance-trace-9582e.firebaseapp.com",
-    projectId: "finance-trace-9582e",
-    storageBucket: "finance-trace-9582e.firebasestorage.app",
-    messagingSenderId: "113395402248",
-    appId: "1:113395402248:web:48dad485b8c7506c8cb3bd",
-    measurementId: "G-YNW35J0CG5"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDJsUqYcNSwcwImS5zXYtIIo7hNvXEJAic",
+      authDomain: "finance-trace-9582e.firebaseapp.com",
+      projectId: "finance-trace-9582e",
+      storageBucket: "finance-trace-9582e.firebasestorage.app",
+      messagingSenderId: "113395402248",
+      appId: "1:113395402248:web:48dad485b8c7506c8cb3bd",
+      measurementId: "G-YNW35J0CG5"
+    };
 
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
 
-  let currentUser     = null;
-  let currentUsername = '';
-  let currentEmail    = '';
-  let unsubscribeSnapshot = null;
-  let transactions    = [];
-  let currentFilter   = 'all';
+    let currentUser = null;
+    let unsubSnap   = null;
+    let transactions = [];
+    let currentFilter = 'all';
 
-  // ── Helper: validate username ──────────────────────────────────────────────
-  function isValidUsername(u) {
-    return /^[a-zA-Z0-9_]{3,20}$/.test(u);
-  }
-
-  // ── Helper: lookup email from username ────────────────────────────────────
-  async function getEmailByUsername(username) {
-    const snap = await getDocs(
-      query(collection(db, 'usernames'), where('username_lower', '==', username.toLowerCase()))
-    );
-    if (snap.empty) return null;
-    return snap.docs[0].data().email;
-  }
-
-  // ── Auth State ────────────────────────────────────────────────────────────
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      currentUser  = user;
-      currentEmail = user.email;
-      // Load username from Firestore
-      const profileSnap = await getDoc(doc(db, 'users', user.uid, 'profile', 'info'));
-      currentUsername = profileSnap.exists() ? (profileSnap.data().username || user.email) : user.email;
+    // ── Auth State ──────────────────────────────────────────────────────────
+    onAuthStateChanged(auth, async (user) => {
       document.getElementById('loadingScreen').style.display = 'none';
-      showApp(user);
-    } else {
-      currentUser     = null;
-      currentUsername = '';
-      document.getElementById('loadingScreen').style.display = 'none';
-      showAuth();
+      if (user) {
+        currentUser = user;
+        // Ambil username dari Firestore
+        const profileSnap = await getDoc(doc(db, 'users', user.uid));
+        const username = profileSnap.exists() ? profileSnap.data().username : '';
+        showApp(user, username);
+      } else {
+        currentUser = null;
+        if (unsubSnap) { unsubSnap(); unsubSnap = null; }
+        showAuth();
+      }
+    });
+
+    function showAuth() {
+      document.getElementById('authPage').style.display = 'flex';
+      document.getElementById('appPage').style.display  = 'none';
     }
-  });
 
-  function showAuth() {
-    if (unsubscribeSnapshot) { unsubscribeSnapshot(); unsubscribeSnapshot = null; }
-    document.getElementById('authPage').style.display  = 'flex';
-    document.getElementById('appPage').style.display   = 'none';
-  }
+    function showApp(user, username) {
+      document.getElementById('authPage').style.display = 'none';
+      document.getElementById('appPage').style.display  = 'block';
+      document.getElementById('userDisplayName').textContent = username ? '@' + username : '';
+      document.getElementById('userEmailDisplay').textContent = user.email;
+      document.getElementById('inputDate').valueAsDate = new Date();
+      listenTransactions(user.uid);
+    }
 
-  function showApp(user) {
-    document.getElementById('authPage').style.display  = 'none';
-    document.getElementById('appPage').style.display   = 'block';
-    updateHeaderUsername();
-    document.getElementById('inputDate').valueAsDate = new Date();
-    listenTransactions(user.uid);
-  }
+    // ── Firestore Realtime ──────────────────────────────────────────────────
+    function listenTransactions(uid) {
+      if (unsubSnap) unsubSnap();
+      const q = query(collection(db, 'users', uid, 'transactions'), orderBy('date', 'desc'));
+      unsubSnap = onSnapshot(q, (snap) => {
+        transactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        render();
+      }, (err) => {
+        console.error(err);
+        showToast('Gagal memuat data. Cek koneksi.');
+      });
+    }
 
-  function updateHeaderUsername() {
-    const name = currentUsername || currentEmail;
-    const initial = name.charAt(0).toUpperCase();
-    document.getElementById('headerUsername').textContent = name;
-    document.getElementById('headerAvatar').textContent   = initial;
-    document.getElementById('profileName').textContent    = name;
-    document.getElementById('profileEmail').textContent   = currentEmail;
-    document.getElementById('profileAvatar').textContent  = initial;
-  }
+    // ── Switch Tab ──────────────────────────────────────────────────────────
+    window.switchAuthTab = (tab) => {
+      hideAuthMessages();
+      document.getElementById('formLogin').style.display    = tab === 'login'    ? 'block' : 'none';
+      document.getElementById('formRegister').style.display = tab === 'register' ? 'block' : 'none';
+      document.getElementById('formReset').style.display    = tab === 'reset'    ? 'block' : 'none';
+      document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+      // Tab reset tidak punya tab button, sembunyikan keduanya kalau reset
+      if (tab === 'reset') {
+        document.getElementById('tabLogin').classList.remove('active');
+        document.getElementById('tabRegister').classList.remove('active');
+      }
+    };
 
-  // ── Firestore Realtime ────────────────────────────────────────────────────
-  function listenTransactions(uid) {
-    if (unsubscribeSnapshot) unsubscribeSnapshot();
-    const q = query(
-      collection(db, 'users', uid, 'transactions'),
-      orderBy('date', 'desc')
-    );
-    unsubscribeSnapshot = onSnapshot(q, (snapshot) => {
-      transactions = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      render();
-    }, (err) => {
-      console.error(err);
-      showToast('Gagal memuat data. Cek koneksi internet.');
-    });
-  }
+    // ── Login (username ATAU email) ─────────────────────────────────────────
+    window.doLogin = async () => {
+      hideAuthMessages();
+      const identifier = document.getElementById('loginIdentifier').value.trim();
+      const pass       = document.getElementById('loginPassword').value;
+      if (!identifier || !pass) return showAuthError('Username/email dan password wajib diisi.');
 
-  // ── AUTH TABS ─────────────────────────────────────────────────────────────
-  window.switchAuthTab = (tab) => {
-    hideAuthMessages();
-    ['login','register','forgot'].forEach(t => {
-      document.getElementById('form' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = 'none';
-    });
-    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
-    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+      const btn = document.getElementById('btnLogin');
+      btn.disabled = true; btn.textContent = 'Masuk...';
 
-    if (tab === 'login')    document.getElementById('formLogin').style.display    = 'block';
-    if (tab === 'register') document.getElementById('formRegister').style.display = 'block';
-    if (tab === 'forgot')   document.getElementById('formForgot').style.display   = 'block';
-  };
+      try {
+        let email = identifier;
 
-  function hideAuthMessages() {
-    document.getElementById('authError').style.display   = 'none';
-    document.getElementById('authSuccess').style.display = 'none';
-  }
-  function showAuthError(msg)   { const e=document.getElementById('authError'); e.textContent=msg; e.style.display='block'; document.getElementById('authSuccess').style.display='none'; }
-  function showAuthSuccess(msg) { const e=document.getElementById('authSuccess'); e.textContent=msg; e.style.display='block'; document.getElementById('authError').style.display='none'; }
+        // Jika bukan format email → cari email berdasarkan username
+        if (!identifier.includes('@')) {
+          const usernameClean = identifier.toLowerCase();
+          const q = query(collection(db, 'usernames'), where('username', '==', usernameClean));
+          const snap = await getDocs(q);
+          if (snap.empty) {
+            showAuthError('Username tidak ditemukan.');
+            btn.disabled = false; btn.textContent = 'Masuk';
+            return;
+          }
+          email = snap.docs[0].data().email;
+        }
 
-  // ── LOGIN ─────────────────────────────────────────────────────────────────
-  window.doLogin = async () => {
-    hideAuthMessages();
-    const identifier = document.getElementById('loginIdentifier').value.trim();
-    const pass       = document.getElementById('loginPassword').value;
-    if (!identifier || !pass) return showAuthError('Mohon isi semua field.');
+        await signInWithEmailAndPassword(auth, email, pass);
+      } catch (e) {
+        showAuthError(friendlyError(e.code));
+        btn.disabled = false; btn.textContent = 'Masuk';
+      }
+    };
 
-    const btn = document.getElementById('btnLogin');
-    btn.disabled = true; btn.textContent = 'Masuk...';
+    // ── Daftar ─────────────────────────────────────────────────────────────
+    window.doRegister = async () => {
+      hideAuthMessages();
+      const username = document.getElementById('regUsername').value.trim().toLowerCase();
+      const email    = document.getElementById('regEmail').value.trim();
+      const pass     = document.getElementById('regPassword').value;
+      const pass2    = document.getElementById('regPassword2').value;
 
-    try {
-      let email = identifier;
-      // If not an email, lookup by username
-      if (!identifier.includes('@')) {
-        const found = await getEmailByUsername(identifier);
-        if (!found) {
-          showAuthError('Username tidak ditemukan.');
-          btn.disabled = false; btn.textContent = 'Masuk';
+      // Validasi
+      if (!username || !email || !pass || !pass2) return showAuthError('Semua field wajib diisi.');
+      if (!/^[a-z0-9_]{3,20}$/.test(username))   return showAuthError('Username hanya boleh huruf kecil, angka, underscore. Min 3, maks 20 karakter.');
+      if (pass !== pass2)                          return showAuthError('Password tidak cocok.');
+      if (pass.length < 6)                         return showAuthError('Password minimal 6 karakter.');
+
+      const btn = document.getElementById('btnRegister');
+      btn.disabled = true; btn.textContent = 'Membuat akun...';
+
+      try {
+        // Cek username sudah dipakai atau belum
+        const usernameRef = doc(db, 'usernames', username);
+        const usernameSnap = await getDoc(usernameRef);
+        if (usernameSnap.exists()) {
+          showAuthError('Username sudah dipakai. Coba username lain.');
+          btn.disabled = false; btn.textContent = 'Buat Akun';
           return;
         }
-        email = found;
-      }
-      await signInWithEmailAndPassword(auth, email, pass);
-    } catch (e) {
-      showAuthError(friendlyError(e.code));
-      btn.disabled = false; btn.textContent = 'Masuk';
-    }
-  };
 
-  // ── REGISTER ──────────────────────────────────────────────────────────────
-  window.doRegister = async () => {
-    hideAuthMessages();
-    const username = document.getElementById('regUsername').value.trim();
-    const email    = document.getElementById('regEmail').value.trim();
-    const pass     = document.getElementById('regPassword').value;
-    const pass2    = document.getElementById('regPassword2').value;
+        // Buat akun Firebase Auth
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        const uid  = cred.user.uid;
 
-    if (!username || !email || !pass) return showAuthError('Mohon isi semua field.');
-    if (!isValidUsername(username))   return showAuthError('Username 3–20 karakter, huruf/angka/underscore saja.');
-    if (pass !== pass2)               return showAuthError('Password tidak cocok.');
-    if (pass.length < 6)              return showAuthError('Password minimal 6 karakter.');
+        // Simpan profil user & mapping username → email
+        await Promise.all([
+          setDoc(doc(db, 'users', uid), { username, email, createdAt: serverTimestamp() }),
+          setDoc(doc(db, 'usernames', username), { uid, email, username })
+        ]);
 
-    const btn = document.getElementById('btnRegister');
-    btn.disabled = true; btn.textContent = 'Membuat akun...';
-
-    try {
-      // Check username availability
-      const uSnap = await getDocs(
-        query(collection(db, 'usernames'), where('username_lower', '==', username.toLowerCase()))
-      );
-      if (!uSnap.empty) {
-        showAuthError('Username sudah dipakai. Coba username lain.');
+        showToast('Akun berhasil dibuat! Selamat datang 🎉');
+      } catch (e) {
+        showAuthError(friendlyError(e.code));
         btn.disabled = false; btn.textContent = 'Buat Akun';
-        return;
       }
-
-      // Create auth user
-      const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      const uid  = cred.user.uid;
-
-      // Save username in username lookup collection
-      await setDoc(doc(db, 'usernames', uid), {
-        username:       username,
-        username_lower: username.toLowerCase(),
-        email:          email,
-        uid:            uid
-      });
-
-      // Save profile in user's profile subcollection
-      await setDoc(doc(db, 'users', uid, 'profile', 'info'), {
-        username:    username,
-        email:       email,
-        createdAt:   serverTimestamp()
-      });
-
-      currentUsername = username;
-      showToast('Akun berhasil dibuat! Selamat datang 🎉');
-    } catch (e) {
-      showAuthError(friendlyError(e.code));
-      btn.disabled = false; btn.textContent = 'Buat Akun';
-    }
-  };
-
-  // ── FORGOT PASSWORD (from auth page) ─────────────────────────────────────
-  window.doForgotPassword = async () => {
-    hideAuthMessages();
-    const email = document.getElementById('forgotEmail').value.trim();
-    if (!email) return showAuthError('Masukkan email kamu.');
-
-    const btn = document.getElementById('btnForgot');
-    btn.disabled = true; btn.textContent = 'Mengirim...';
-
-    try {
-      await sendPasswordResetEmail(auth, email);
-      showAuthSuccess('✅ Link reset telah dikirim ke ' + email + '. Cek kotak masuk dan folder spam.');
-    } catch (e) {
-      showAuthError(friendlyError(e.code));
-    } finally {
-      btn.disabled = false; btn.textContent = 'Kirim Link Reset';
-    }
-  };
-
-  // ── LOGOUT ────────────────────────────────────────────────────────────────
-  window.doLogout = async () => {
-    if (!confirm('Yakin ingin keluar?')) return;
-    closeProfileModal();
-    await signOut(auth);
-  };
-
-  // ── PROFILE MODAL ─────────────────────────────────────────────────────────
-  window.openProfileModal = () => {
-    document.getElementById('newUsername').value = currentUsername;
-    clearModalMessages();
-    document.getElementById('profileModal').classList.add('open');
-  };
-
-  window.closeProfileModal = (e) => {
-    if (e && e.target !== document.getElementById('profileModal')) return;
-    document.getElementById('profileModal').classList.remove('open');
-  };
-
-  function clearModalMessages() {
-    ['usernameError','usernameSuccess','resetError','resetSuccess'].forEach(id => {
-      document.getElementById(id).style.display = 'none';
-      document.getElementById(id).textContent   = '';
-    });
-  }
-
-  function showModalMsg(id, msg) {
-    clearModalMessages();
-    document.getElementById(id).textContent   = msg;
-    document.getElementById(id).style.display = 'block';
-  }
-
-  // ── CHANGE USERNAME ───────────────────────────────────────────────────────
-  window.doChangeUsername = async () => {
-    const newName = document.getElementById('newUsername').value.trim();
-    if (!newName) return showModalMsg('usernameError', 'Username tidak boleh kosong.');
-    if (!isValidUsername(newName)) return showModalMsg('usernameError', 'Username 3–20 karakter, huruf/angka/underscore.');
-    if (newName.toLowerCase() === currentUsername.toLowerCase()) return showModalMsg('usernameError', 'Username baru sama dengan yang sekarang.');
-
-    const btn = document.getElementById('btnSaveUsername');
-    btn.disabled = true; btn.textContent = 'Menyimpan...';
-
-    try {
-      // Check availability
-      const uSnap = await getDocs(
-        query(collection(db, 'usernames'), where('username_lower', '==', newName.toLowerCase()))
-      );
-      if (!uSnap.empty) {
-        showModalMsg('usernameError', 'Username sudah dipakai. Coba yang lain.');
-        btn.disabled = false; btn.textContent = 'Simpan Username';
-        return;
-      }
-
-      const uid = currentUser.uid;
-
-      // Delete old username doc, create new one
-      await deleteDoc(doc(db, 'usernames', uid));
-      await setDoc(doc(db, 'usernames', uid), {
-        username:       newName,
-        username_lower: newName.toLowerCase(),
-        email:          currentEmail,
-        uid:            uid
-      });
-
-      // Update profile
-      await setDoc(doc(db, 'users', uid, 'profile', 'info'), {
-        username:  newName,
-        email:     currentEmail,
-        updatedAt: serverTimestamp()
-      }, { merge: true });
-
-      currentUsername = newName;
-      updateHeaderUsername();
-      showModalMsg('usernameSuccess', '✅ Username berhasil diubah menjadi @' + newName);
-    } catch (e) {
-      showModalMsg('usernameError', 'Gagal mengubah username. Coba lagi.');
-      console.error(e);
-    } finally {
-      btn.disabled = false; btn.textContent = 'Simpan Username';
-    }
-  };
-
-  // ── SEND RESET FROM PROFILE ───────────────────────────────────────────────
-  window.doSendResetFromProfile = async () => {
-    const btn = document.getElementById('btnSendReset');
-    btn.disabled = true; btn.textContent = 'Mengirim...';
-    try {
-      await sendPasswordResetEmail(auth, currentEmail);
-      showModalMsg('resetSuccess', '✅ Link reset dikirim ke ' + currentEmail + '. Cek kotak masuk & spam.');
-    } catch (e) {
-      showModalMsg('resetError', 'Gagal mengirim email. Coba lagi.');
-      console.error(e);
-    } finally {
-      btn.disabled = false; btn.textContent = '📧 Kirim Link Reset Password';
-    }
-  };
-
-  // ── TRANSACTION ACTIONS ───────────────────────────────────────────────────
-  window.addTransaction = async () => {
-    const date   = document.getElementById('inputDate').value;
-    const raw    = document.getElementById('inputAmount').value.replace(/\D/g, '');
-    const amount = parseInt(raw, 10);
-    const desc   = document.getElementById('inputDesc').value.trim();
-    const type   = document.getElementById('inputType').value;
-
-    if (!date || !desc || isNaN(amount) || amount <= 0) {
-      showToast('Mohon isi semua field dengan benar.');
-      return;
-    }
-
-    const btn = document.getElementById('btnAdd');
-    btn.disabled = true; btn.textContent = 'Menyimpan...';
-    setSyncStatus('saving', '⏳ Menyimpan...');
-
-    try {
-      await addDoc(collection(db, 'users', currentUser.uid, 'transactions'), {
-        date, desc, amount, type,
-        createdAt: serverTimestamp()
-      });
-      document.getElementById('inputAmount').value = '';
-      document.getElementById('inputDesc').value   = '';
-      setSyncStatus('saved', '✅ Tersimpan di cloud');
-      showToast('Transaksi berhasil disimpan!');
-      setTimeout(() => setSyncStatus('', ''), 3000);
-    } catch (e) {
-      console.error(e);
-      setSyncStatus('error', '❌ Gagal menyimpan');
-      showToast('Gagal menyimpan. Cek koneksi internet.');
-    } finally {
-      btn.disabled = false; btn.textContent = '+ Simpan Transaksi';
-    }
-  };
-
-  window.deleteTransaction = async (id) => {
-    if (!confirm('Hapus transaksi ini?')) return;
-    try {
-      await deleteDoc(doc(db, 'users', currentUser.uid, 'transactions', id));
-      showToast('Transaksi dihapus.');
-    } catch (e) {
-      showToast('Gagal menghapus. Coba lagi.');
-    }
-  };
-
-  // ── FORMAT & RENDER ───────────────────────────────────────────────────────
-  function formatIDR(num) {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency', currency: 'IDR', maximumFractionDigits: 0
-    }).format(num);
-  }
-
-  function render() {
-    const filtered = currentFilter === 'all'
-      ? transactions
-      : transactions.filter(t => t.type === currentFilter);
-
-    let inc = 0, exp = 0, sav = 0;
-    transactions.forEach(t => {
-      if      (t.type === 'income')  inc += t.amount;
-      else if (t.type === 'expense') exp += t.amount;
-      else if (t.type === 'savings') sav += t.amount;
-    });
-    document.getElementById('sumIncome').textContent  = formatIDR(inc);
-    document.getElementById('sumExpense').textContent = formatIDR(exp);
-    document.getElementById('sumSavings').textContent = formatIDR(sav);
-    const bal   = inc - exp - sav;
-    const balEl = document.getElementById('sumBalance');
-    balEl.textContent = formatIDR(bal);
-    balEl.style.color = bal >= 0 ? 'var(--text)' : '#dc2626';
-
-    const listEl = document.getElementById('txList');
-    if (filtered.length === 0) {
-      listEl.innerHTML = `
-        <div class="empty">
-          <div style="font-size:36px;">📋</div>
-          <p>Belum ada transaksi. Mulai catat di atas!</p>
-        </div>`;
-      return;
-    }
-
-    const typeLabel = { income: 'Pemasukan', expense: 'Pengeluaran', savings: 'Tabungan' };
-    const typeColor = { income: 'var(--income)', expense: 'var(--expense)', savings: 'var(--savings)' };
-    const typeSign  = { income: '+', expense: '-', savings: '💸' };
-
-    listEl.innerHTML = filtered.map(t => `
-      <div class="item ${t.type}">
-        <div class="info">
-          <h4>${escHtml(t.desc)}</h4>
-          <span>${formatDate(t.date)} • ${typeLabel[t.type]}</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:0;">
-          <div class="amount" style="color:${typeColor[t.type]}">
-            ${typeSign[t.type]} ${formatIDR(t.amount)}
-          </div>
-          <button class="btn-del" onclick="deleteTransaction('${t.id}')">×</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function formatDate(dateStr) {
-    if (!dateStr) return '';
-    const [y, m, d] = dateStr.split('-');
-    return new Date(+y, +m - 1, +d).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
-  }
-
-  function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function setSyncStatus(type, msg) {
-    const el = document.getElementById('syncStatus');
-    el.textContent = msg;
-    el.className = 'sync-status ' + type;
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
-
-  // ── AMOUNT INPUT FORMAT ───────────────────────────────────────────────────
-  const amountInput = document.getElementById('inputAmount');
-  amountInput.addEventListener('input', function () {
-    const cursor  = this.selectionStart;
-    const prevLen = this.value.length;
-    const raw     = this.value.replace(/\D/g, '');
-    if (!raw) { this.value = ''; return; }
-    this.value = new Intl.NumberFormat('id-ID').format(parseInt(raw, 10));
-    const diff = this.value.length - prevLen;
-    this.setSelectionRange(cursor + diff, cursor + diff);
-  });
-  amountInput.addEventListener('focus', function () { this.value = this.value.replace(/\D/g, ''); });
-  amountInput.addEventListener('blur',  function () {
-    const raw = this.value.replace(/\D/g, '');
-    if (!raw) return;
-    this.value = new Intl.NumberFormat('id-ID').format(parseInt(raw, 10));
-  });
-
-  // ── TABS ──────────────────────────────────────────────────────────────────
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      currentFilter = tab.dataset.filter;
-      render();
-    });
-  });
-
-  // ── ENTER KEY ─────────────────────────────────────────────────────────────
-  document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') window.doLogin(); });
-  document.getElementById('regPassword2').addEventListener('keydown', e => { if (e.key === 'Enter') window.doRegister(); });
-  document.getElementById('forgotEmail').addEventListener('keydown', e => { if (e.key === 'Enter') window.doForgotPassword(); });
-
-  function friendlyError(code) {
-    const map = {
-      'auth/invalid-email':          'Format email tidak valid.',
-      'auth/user-not-found':         'Email tidak terdaftar.',
-      'auth/wrong-password':         'Password salah.',
-      'auth/email-already-in-use':   'Email sudah terdaftar. Silakan masuk.',
-      'auth/weak-password':          'Password terlalu lemah.',
-      'auth/invalid-credential':     'Email atau password salah.',
-      'auth/too-many-requests':      'Terlalu banyak percobaan. Coba lagi nanti.',
-      'auth/network-request-failed': 'Tidak ada koneksi internet.',
     };
-    return map[code] || `Terjadi kesalahan (${code}).`;
-  }
-</script>
+
+    // ── Reset Password ──────────────────────────────────────────────────────
+    window.doResetPassword = async () => {
+      hideAuthMessages();
+      const email = document.getElementById('resetEmail').value.trim();
+      if (!email) return showAuthError('Masukkan email kamu terlebih dahulu.');
+
+      const btn = document.getElementById('btnReset');
+      btn.disabled = true; btn.textContent = 'Mengirim...';
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        document.getElementById('formReset').innerHTML = `
+          <div style="text-align:center;padding:16px 0;">
+            <div style="font-size:40px;margin-bottom:12px;">📧</div>
+            <p style="font-weight:700;font-size:16px;margin-bottom:8px;">Email terkirim!</p>
+            <p style="font-size:13px;color:#6b7280;margin-bottom:20px;">
+              Cek inbox <strong>${escHtml(email)}</strong> dan klik link reset password.<br>
+              Cek folder spam jika tidak muncul.
+            </p>
+            <span onclick="switchAuthTab('login')" style="color:#6366f1;cursor:pointer;font-weight:600;font-size:14px;">← Kembali ke Login</span>
+          </div>`;
+      } catch (e) {
+        showAuthError(friendlyError(e.code));
+        btn.disabled = false; btn.textContent = 'Kirim Link Reset';
+      }
+    };
+
+    // ── Logout ──────────────────────────────────────────────────────────────
+    window.doLogout = async () => {
+      if (!confirm('Yakin ingin keluar?')) return;
+      await signOut(auth);
+    };
+
+    // ── Helpers Auth ────────────────────────────────────────────────────────
+    function showAuthError(msg) {
+      const el = document.getElementById('authError');
+      el.textContent = msg; el.style.display = 'block';
+      document.getElementById('authSuccess').style.display = 'none';
+    }
+    function hideAuthMessages() {
+      document.getElementById('authError').style.display   = 'none';
+      document.getElementById('authSuccess').style.display = 'none';
+    }
+    function friendlyError(code) {
+      const map = {
+        'auth/invalid-email':          'Format email tidak valid.',
+        'auth/user-not-found':         'Email tidak terdaftar.',
+        'auth/wrong-password':         'Password salah.',
+        'auth/email-already-in-use':   'Email sudah terdaftar. Silakan masuk.',
+        'auth/weak-password':          'Password terlalu lemah, minimal 6 karakter.',
+        'auth/invalid-credential':     'Username/email atau password salah.',
+        'auth/too-many-requests':      'Terlalu banyak percobaan. Coba lagi nanti.',
+        'auth/network-request-failed': 'Tidak ada koneksi internet.',
+      };
+      return map[code] || `Terjadi kesalahan (${code}).`;
+    }
+
+    // ── Transaksi ───────────────────────────────────────────────────────────
+    window.addTransaction = async () => {
+      const date   = document.getElementById('inputDate').value;
+      const raw    = document.getElementById('inputAmount').value.replace(/\D/g, '');
+      const amount = parseInt(raw, 10);
+      const desc   = document.getElementById('inputDesc').value.trim();
+      const type   = document.getElementById('inputType').value;
+
+      if (!date || !desc || isNaN(amount) || amount <= 0) {
+        showToast('Mohon isi semua field dengan benar.');
+        return;
+      }
+
+      const btn = document.getElementById('btnAdd');
+      btn.disabled = true; btn.textContent = 'Menyimpan...';
+      setSyncStatus('saving', '⏳ Menyimpan...');
+
+      try {
+        await addDoc(collection(db, 'users', currentUser.uid, 'transactions'), {
+          date, desc, amount, type, createdAt: serverTimestamp()
+        });
+        document.getElementById('inputAmount').value = '';
+        document.getElementById('inputDesc').value   = '';
+        setSyncStatus('saved', '✅ Tersimpan di cloud');
+        showToast('Transaksi berhasil disimpan!');
+        setTimeout(() => setSyncStatus('', ''), 3000);
+      } catch (e) {
+        setSyncStatus('error', '❌ Gagal menyimpan');
+        showToast('Gagal menyimpan. Cek koneksi internet.');
+      } finally {
+        btn.disabled = false; btn.textContent = '+ Simpan Transaksi';
+      }
+    };
+
+    window.deleteTransaction = async (id) => {
+      if (!confirm('Hapus transaksi ini?')) return;
+      try {
+        await deleteDoc(doc(db, 'users', currentUser.uid, 'transactions', id));
+        showToast('Transaksi dihapus.');
+      } catch (e) {
+        showToast('Gagal menghapus. Coba lagi.');
+      }
+    };
+
+    // ── Render ──────────────────────────────────────────────────────────────
+    function formatIDR(num) {
+      return new Intl.NumberFormat('id-ID', { style:'currency', currency:'IDR', maximumFractionDigits:0 }).format(num);
+    }
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const [y, m, d] = dateStr.split('-');
+      return new Date(+y, +m-1, +d).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+    }
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function setSyncStatus(type, msg) {
+      const el = document.getElementById('syncStatus');
+      el.textContent = msg; el.className = 'sync-status ' + type;
+    }
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function render() {
+      const filtered = currentFilter === 'all' ? transactions : transactions.filter(t => t.type === currentFilter);
+      let inc=0, exp=0, savIn=0, savOut=0;
+      transactions.forEach(t => {
+        if (t.type==='income')      inc    += t.amount;
+        else if (t.type==='expense')     exp    += t.amount;
+        else if (t.type==='savings')     savIn  += t.amount;
+        else if (t.type==='savings_out') savOut += t.amount;
+      });
+      const savNet = savIn - savOut;
+      document.getElementById('sumIncome').textContent  = formatIDR(inc);
+      document.getElementById('sumExpense').textContent = formatIDR(exp + savOut);
+      document.getElementById('sumSavings').textContent = formatIDR(savNet);
+      document.getElementById('sumSavings').style.color = savNet >= 0 ? 'var(--savings)' : 'var(--expense)';
+      const bal = inc - exp - savOut - savIn;
+      const balEl = document.getElementById('sumBalance');
+      balEl.textContent = formatIDR(bal);
+      balEl.style.color = bal >= 0 ? 'var(--text)' : '#dc2626';
+
+      const listEl = document.getElementById('txList');
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div class="empty"><div style="font-size:36px;">📋</div><p>Belum ada transaksi. Mulai catat di atas!</p></div>`;
+        return;
+      }
+      const typeLabel = { income:'Pemasukan', expense:'Pengeluaran', savings:'Setor Tabungan', savings_out:'Tarik Tabungan' };
+      const typeColor = { income:'var(--income)', expense:'var(--expense)', savings:'var(--savings)', savings_out:'var(--expense)' };
+      const typeSign  = { income:'+', expense:'-', savings:'💸', savings_out:'💰' };
+      listEl.innerHTML = filtered.map(t => `
+        <div class="item ${t.type === 'savings_out' ? 'expense' : t.type}">
+          <div class="info">
+            <h4>${escHtml(t.desc)}</h4>
+            <span>${formatDate(t.date)} • ${typeLabel[t.type]}</span>
+          </div>
+          <div style="display:flex;align-items:center;">
+            <div class="amount" style="color:${typeColor[t.type]}">${typeSign[t.type]} ${formatIDR(t.amount)}</div>
+            <button class="btn-del" onclick="deleteTransaction('${t.id}')">×</button>
+          </div>
+        </div>`).join('');
+    }
+
+    // ── Format Input Jumlah ─────────────────────────────────────────────────
+    const amountInput = document.getElementById('inputAmount');
+    amountInput.addEventListener('input', function() {
+      const cursor = this.selectionStart, prevLen = this.value.length;
+      const raw = this.value.replace(/\D/g,'');
+      if (!raw) { this.value=''; return; }
+      this.value = new Intl.NumberFormat('id-ID').format(parseInt(raw,10));
+      const diff = this.value.length - prevLen;
+      this.setSelectionRange(cursor+diff, cursor+diff);
+    });
+    amountInput.addEventListener('focus', function() { this.value = this.value.replace(/\D/g,''); });
+    amountInput.addEventListener('blur',  function() {
+      const raw = this.value.replace(/\D/g,'');
+      if (raw) this.value = new Intl.NumberFormat('id-ID').format(parseInt(raw,10));
+    });
+
+    // ── Tabs ────────────────────────────────────────────────────────────────
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentFilter = tab.dataset.filter;
+        render();
+      });
+    });
+
+    // Enter key
+    document.getElementById('loginPassword').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
+    document.getElementById('regPassword2').addEventListener('keydown',  e => { if(e.key==='Enter') window.doRegister(); });
+    document.getElementById('loginIdentifier').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
+  </script>
 </body>
 </html>
